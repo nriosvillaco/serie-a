@@ -1,15 +1,3 @@
-library(here)
-library(dplyr)
-library(tidyr)
-library(lubridate)
-
-#load data ----
-
-#create file path
-seriea_23_24 <- here("data/a_23-24.csv")
-
-data <- read.csv(seriea_23_24)
-
 #examine missingness ----
 
 missingness <- data %>%
