@@ -65,11 +65,9 @@ outliers_z <- data %>%
 #investigate outliers
 outlier_rows <- data[c(3, 8, 259, 380),]
 
-#format data consistently ----
+#format data ----
 
-#create new features ----
-
-data_matchday <- data %>%
+data_all <- data %>%
   #convert Date column to Date type
   mutate(MatchDate = dmy(Date)) %>%
   relocate(MatchDate, .after = Date) %>%
@@ -120,6 +118,48 @@ data_matchday <- data %>%
     )
   ) %>%
   relocate(MatchDay, .before = Date)
+
+#separate data into match data and sportsbook data; rename columns
+
+data_23_24 <- data_all %>%
+  select(
+    matchday = MatchDay,
+    date = Date,
+    time = Time,
+    home = HomeTeam,
+    away = AwayTeam,
+    FTHG:AR
+    )
+
+data_bet_23_24 <- data_all %>%
+  select(
+    matchday = MatchDay,
+    date = Date,
+    time = Time,
+    home = HomeTeam,
+    away = AwayTeam,
+    B365H:AvgA,
+    B365_over2.5 = B365.2.5,
+    B365_under2.5 = B365.2.5.1,
+    P_over2.5 = P.2.5,
+    P_under2.5 = P.2.5.1,
+    Max_over2.5 = Max.2.5,
+    Max_under2.5 = Max.2.5.1,
+    Avg_over2.5 = Avg.2.5,
+    Avg_under2.5 = Avg.2.5.1,
+    AHh:AvgCA,
+    B365_closing_over2.5 = B365C.2.5,
+    B36_closing_under2.5 = B365C.2.5.1,
+    P_closing_over2.5 = PC.2.5,
+    P_closing_under2.5 = PC.2.5.1,
+    Max_closing_over2.5 = MaxC.2.5,
+    Max_closing_under2.5 = MaxC.2.5.1,
+    Avg_closing_over2.5 = AvgC.2.5,
+    Avg_closing_under2.5 = AvgC.2.5.1,
+    AHCh:AvgCAHA
+  )
+
+
 
 #add average goals scored
 #add home/away performance: home win rate, away win rate, home/away goal differential
