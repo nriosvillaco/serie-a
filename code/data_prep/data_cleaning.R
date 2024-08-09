@@ -146,13 +146,3 @@ data_bet_23_24 <- data_all %>%
     Avg_closing_under2.5 = AvgC.2.5.1,
     AHCh:AvgCAHA
   )
-
-
-
-#add average goals scored
-#add home/away performance: home win rate, away win rate, home/away goal differential
-#add recent form: last 5 matches performance, current winning/losing/unbeaten streak
-#add head-to-head record: historical and recent performance against opponent
-#add key player performance: top scorer stats, key passes/assists, goalkeeper performance
-#add recent player performance
-#add league position
