@@ -33,20 +33,25 @@ server <- function(input, output, session) {
   })
   
   output$linePlot <- renderPlot({
-    club_data <- data_matchday %>%
-      #filter matchday data for the selected club
-      filter(club == input$club) %>%
-      #create lineplot
-      ggplot(aes(x = matchday, y = total_points, group = 1)) +
-      geom_line(color = "blue", size = 1.2) +
-      geom_point(color = "red", size = 3) +
-      labs(
-        title = paste("Total Points After Each Matchday:", input$club),
-        x = "Matchday",
-        y = "Total Points"
+    matches_ranked <- data_matchday %>%
+      group_by(matchday) %>%
+      mutate(
+        rank = dense_rank(-total_points), #rank each team in relation to others within each matchday
+        highlight = ifelse(club == input$club, "Selected", "Other") #mark the selected team
+        )
+      
+  #create lineplot
+  ggplot(matches_ranked, aes(x = matchday, y = rank, color = highlight)) +
+    geom_line(alpha = 0.3) + #other non-selected teams have a faded color
+    geom_line(data = subset(matches_ranked, highlight == "Selected"), aes(x = matchday, y = rank), size = 1.2, color = "blue") +  #bold line for selected team
+    labs(
+      title = paste("Rank of Teams Over Time:", input$club),
+      x = "Matchday",
+      y = "Rank by Total Points",
+      color = "Team"
       ) +
-      theme_minimal()
-    club_data #return the plot to be displayed
+    scale_y_reverse() + #invert rank axis
+    theme_minimal()
   })
 }
 
