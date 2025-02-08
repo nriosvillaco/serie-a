@@ -23,23 +23,26 @@ data_matchday <- data_23_24 %>%
     values_to =  "Club"
     ) %>%
   mutate(
-    Opponent = if_else(Location == "home", OpponentHome, OpponentAway),
-    Result = case_when(
+    opponent = if_else(Location == "home", OpponentHome, OpponentAway),
+    result = case_when(
       (Location == "home" & FTR == "H") ~ "W",
       (Location == "home" & FTR == "A") ~ "L",
       (Location == "away" & FTR == "H") ~ "L",
       (Location == "away" & FTR == "A") ~ "W",
       FTR == "D" ~ "D",
     ),
-    Points = if_else(Location == "home", HomePoints, AwayPoints)
+    points = if_else(Location == "home", HomePoints, AwayPoints)
     ) %>%
   select(
     matchday,
-    Club,
-    Opponent,
-    Result,
-    Points
-  )
+    club = Club,
+    opponent,
+    result,
+    points
+  ) %>%
+  group_by(club) %>%
+  arrange(matchday) %>%
+  mutate(total_points = cumsum(points))
 
 #group data by team and add new features ----
 
