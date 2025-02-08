@@ -15,11 +15,12 @@ data <- read.csv(seriea_23_24)
 data_cleaning <- here("code/data_prep/source/data_cleaning.R")
 source(data_cleaning)
 
-#add new features ----
+#group data and add new features ----
 data_features <- here("code/data_prep/source/data_features.R")
 source(data_features)
 
 #save cleaned and processed dfs
 save(data_23_24, file = paste0(root, "/data/clean/data__matches_23_24"))
 save(data_bet_23_24, file = paste0(root, "/data/clean/data_sportsbook_23_24"))
+save(data_matchday, file = paste0(root, "/data/processed/data_matchday_23_24"))
 save(data_aggregate, file = paste0(root, "/data/processed/data_aggregated_matches_23_24"))

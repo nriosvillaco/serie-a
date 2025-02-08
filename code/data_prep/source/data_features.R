@@ -1,4 +1,47 @@
-#add new features to data ----
+#create table with total points for each team after each matchday ----
+
+data_matchday <- data_23_24 %>%
+  #assign points based on matchday
+  mutate(
+    OpponentHome = away,
+    OpponentAway = home,
+    HomePoints = case_when(
+      FTR == "H" ~ 3,
+      FTR == "D" ~ 1,
+      FTR == "A" ~ 0
+      ),
+    AwayPoints = case_when(
+      FTR == "H" ~ 0,
+      FTR == "D" ~ 1,
+      FTR == "A" ~ 3
+    )
+  ) %>%
+  #reshape data to combine home/away results, including opponent
+  pivot_longer(
+    cols = c(home, away),
+    names_to = "Location",
+    values_to =  "Club"
+    ) %>%
+  mutate(
+    Opponent = if_else(Location == "home", OpponentHome, OpponentAway),
+    Result = case_when(
+      (Location == "home" & FTR == "H") ~ "W",
+      (Location == "home" & FTR == "A") ~ "L",
+      (Location == "away" & FTR == "H") ~ "L",
+      (Location == "away" & FTR == "A") ~ "W",
+      FTR == "D" ~ "D",
+    ),
+    Points = if_else(Location == "home", HomePoints, AwayPoints)
+    ) %>%
+  select(
+    matchday,
+    Club,
+    Opponent,
+    Result,
+    Points
+  )
+
+#group data by team and add new features ----
 
 data_aggregate <- data_23_24 %>%
   #combine home and away into one column
